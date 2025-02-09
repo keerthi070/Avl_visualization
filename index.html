@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AVL Tree Visualization</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="controls">
+        <input type="number" id="valueInput" placeholder="Enter value">
+        <button onclick="insertNode()">Insert</button>
+        <button onclick="deleteNode()">Delete</button>
+        <button onclick="resetTree()">Reset</button>
+        <button onclick="getTreeHeight()">Height</button>
+        <button onclick="searchNode()">Find</button>
+        <div id="output"></div>
+    </div>
+    <div id="treeContainer">
+        <svg id="treeSVG"></svg>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
