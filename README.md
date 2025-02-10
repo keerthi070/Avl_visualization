@@ -36,8 +36,8 @@ This project is an **interactive AVL Tree visualization tool** built using **HTM
 3. **Run** **`index.html`** in any modern browser
 
 
-## ScreenShot
-
+## Output ScreenShot
+![Image](https://github.com/user-attachments/assets/bb622517-036d-4d22-8c03-33a19c7ecb5a)
 
  
 
