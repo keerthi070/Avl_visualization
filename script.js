@@ -107,15 +107,21 @@ function insertNode() {
 }
 
 function getTreeHeight() {
-    avlTree.getTreeHeight();
+    let height = avlTree.getHeight(avlTree.root);
+    document.getElementById("treeHeightDisplay").innerText = `Tree Height: ${height}`;
 }
 
 function searchNode() {
     let value = parseInt(document.getElementById("valueInput").value);
     if (!isNaN(value)) {
-        avlTree.searchValue(value);
+        let foundNode = avlTree.search(avlTree.root, value);
+        drawTree(foundNode);
+        document.getElementById("searchResultDisplay").innerText = foundNode 
+            ? `Value ${value} found in the tree!` 
+            : `Value ${value} not found.`;
     }
 }
+
 
 function resetTree() {
     avlTree.reset();
