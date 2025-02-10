@@ -45,8 +45,10 @@ class AVLTree {
 
         if (value < node.value) {
             node.left = this.insert(node.left, value);
-        } else {
+        } else if (value > node.value) {
             node.right = this.insert(node.right, value);
+        } else {
+            return node; // No duplicates
         }
 
         node.height = Math.max(this.getHeight(node.left), this.getHeight(node.right)) + 1;
@@ -66,32 +68,80 @@ class AVLTree {
         return node;
     }
 
+    getMinValueNode(node) {
+        while (node.left) {
+            node = node.left;
+        }
+        return node;
+    }
+
+    delete(node, value) {
+        if (!node) return node;
+
+        if (value < node.value) {
+            node.left = this.delete(node.left, value);
+        } else if (value > node.value) {
+            node.right = this.delete(node.right, value);
+        } else {
+            if (!node.left || !node.right) {
+                node = node.left ? node.left : node.right;
+            } else {
+                let temp = this.getMinValueNode(node.right);
+                node.value = temp.value;
+                node.right = this.delete(node.right, temp.value);
+            }
+        }
+
+        if (!node) return node;
+
+        node.height = Math.max(this.getHeight(node.left), this.getHeight(node.right)) + 1;
+        let balance = this.getBalanceFactor(node);
+
+        if (balance > 1 && this.getBalanceFactor(node.left) >= 0) return this.rotateRight(node);
+        if (balance > 1 && this.getBalanceFactor(node.left) < 0) {
+            node.left = this.rotateLeft(node.left);
+            return this.rotateRight(node);
+        }
+        if (balance < -1 && this.getBalanceFactor(node.right) <= 0) return this.rotateLeft(node);
+        if (balance < -1 && this.getBalanceFactor(node.right) > 0) {
+            node.right = this.rotateRight(node.right);
+            return this.rotateLeft(node);
+        }
+
+        return node;
+    }
+
     insertValue(value) {
         this.root = this.insert(this.root, value);
         drawTree();
     }
 
+    deleteValue(value) {
+        this.root = this.delete(this.root, value);
+        drawTree();
+    }
+
     getTreeHeight() {
-        document.getElementById("output").innerText = `Tree Height: ${this.getHeight(this.root)}`;
+        document.getElementById("treeHeightDisplay").innerText = `Tree Height: ${this.getHeight(this.root)}`;
     }
 
     searchValue(value) {
         let node = this.search(this.root, value);
-        document.getElementById("output").innerText = node ? `Value ${value} found!` : `Value ${value} not found.`;
+        document.getElementById("searchResultDisplay").innerText = node ? `Value ${value} found!` : `Value ${value} not found.`;
         drawTree(node);
     }
 
     search(node, value) {
         if (!node) return null;
         if (node.value === value) return node;
-        if (value < node.value) return this.search(node.left, value);
-        return this.search(node.right, value);
+        return value < node.value ? this.search(node.left, value) : this.search(node.right, value);
     }
 
     reset() {
         this.root = null;
         drawTree();
-        document.getElementById("output").innerText = "";
+        document.getElementById("treeHeightDisplay").innerText = "";
+        document.getElementById("searchResultDisplay").innerText = "";
     }
 }
 
@@ -106,22 +156,24 @@ function insertNode() {
     }
 }
 
+function deleteNode() {
+    let value = parseInt(document.getElementById("valueInput").value);
+    if (!isNaN(value)) {
+        avlTree.deleteValue(value);
+        document.getElementById("valueInput").value = "";
+    }
+}
+
 function getTreeHeight() {
-    let height = avlTree.getHeight(avlTree.root);
-    document.getElementById("treeHeightDisplay").innerText = `Tree Height: ${height}`;
+    avlTree.getTreeHeight();
 }
 
 function searchNode() {
     let value = parseInt(document.getElementById("valueInput").value);
     if (!isNaN(value)) {
-        let foundNode = avlTree.search(avlTree.root, value);
-        drawTree(foundNode);
-        document.getElementById("searchResultDisplay").innerText = foundNode 
-            ? `Value ${value} found in the tree!` 
-            : `Value ${value} not found.`;
+        avlTree.searchValue(value);
     }
 }
-
 
 function resetTree() {
     avlTree.reset();
@@ -136,7 +188,7 @@ function drawTree(highlightNode = null) {
 function drawNode(node, x, y, offset, highlightNode) {
     if (!node) return;
 
-    let verticalSpacing = 50; 
+    let verticalSpacing = 50;
 
     if (node.left) {
         svg.append("line")
