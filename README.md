@@ -1,6 +1,6 @@
 # AVL Visualization
 
-This project is an **interactive AVL Tree visualization tool** built using **HTML, CSS, JavaScript, and D3.js**. It allows users to **insert, delete, search, and view the height** of nodes in a balanced AVL tree.
+This project is an **interactive AVL Tree visualization tool** built using **HTML, CSS, JavaScript**. It allows users to **insert, delete, search, and view the height** of nodes in a balanced AVL tree.
 
 ## 🚀 Features
 
